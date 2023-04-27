@@ -2,6 +2,9 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import Nav from "./components/Nav";
+import Content from "./components/Content";
+import Leaflet from "./components/Leaflet";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -28,22 +31,9 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p> */}
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col col-9">
-            <h1>Koordinat Jalan Lampung Selatan</h1>
-          </div>
-          <div className="col col-3">
-            <form className="d-flex">
-              <input
-                type="search"
-                className="form-control my-2"
-                placeholder="Search"
-              />
-            </form>
-          </div>
-        </div>
-      </div>
+      <Nav />
+      <Content />
+      {/* <Leaflet /> */}
     </>
   );
 }
