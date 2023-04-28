@@ -7,7 +7,7 @@ const Leaflet = () => {
       center={[51.505, -0.09]}
       zoom={13}
       scrollWheelZoom={false}
-      style={{ minHeight: "80vh", maxWidth: "100%" }}
+      style={{ minHeight: "70vh", maxWidth: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
