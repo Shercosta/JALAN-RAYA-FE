@@ -1,40 +1,55 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import Nav from "./components/Nav";
-import Content from "./components/Content";
-import Leaflet from "./components/Leaflet";
+import _ from 'lodash';
+import { useMemo, useState } from 'react';
+import { Box } from '@chakra-ui/react';
+import { Polyline } from 'react-leaflet';
+import NavBar from './components/NavBar';
+import useRoadLoader from './hooks/useRoadLoader';
+import MapContainer from './components/MapContainer';
+import useRoadTypes from './hooks/useRoadTypes';
+import { ROAD_COLOR } from './utils/color';
 
 function App() {
-  // const [count, setCount] = useState(0)
+  const [isFetching, setIsFetching] = useState(true);
+  const [type, setType] = useState('none');
+  const types = useRoadTypes();
+  const roads = useRoadLoader({ type, setIsFetching });
+  const coordinates = useMemo(
+    () =>
+      _.map(roads ?? [], ({ geom, remark }) => {
+        const { coordinates } = geom;
+
+        return {
+          coordinates: _.map(coordinates, (coords) =>
+            _.map(coords, (coord) => [coord[1], coord[0]])
+          ),
+          type: remark,
+        };
+      }),
+    [roads]
+  );
 
   return (
-    <>
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-      <Nav />
-      <Content />
-      {/* <Leaflet /> */}
-    </>
+    <Box gap={2} overflow={'hidden'} h={'100vh'} w={'100vw'}>
+      <NavBar
+        type={type}
+        setType={setType}
+        types={types}
+        isFetching={isFetching}
+      />
+      <MapContainer>
+        {_.map(coordinates, ({ coordinates, type }) => {
+          const color = ROAD_COLOR[_.snakeCase(type).toUpperCase()];
+
+          return (
+            <Polyline
+              positions={coordinates}
+              key={coordinates}
+              {...{ color }}
+            />
+          );
+        })}
+      </MapContainer>
+    </Box>
   );
 }
 
