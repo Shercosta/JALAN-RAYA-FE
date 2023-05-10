@@ -43,7 +43,7 @@ const NavBar = ({
         mb={2}
         textTransform={'uppercase'}
       >
-        Kabupaten Lampung Selatang
+        Kabupaten Lampung Selatan
       </Text>
       <Box>
         <Select value={type} onChange={onSelectionChange} disabled={isFetching}>

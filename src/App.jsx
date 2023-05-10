@@ -13,20 +13,18 @@ function App() {
   const [type, setType] = useState('none');
   const types = useRoadTypes();
   const roads = useRoadLoader({ type, setIsFetching });
-  const coordinates = useMemo(
-    () =>
-      _.map(roads ?? [], ({ geom, remark }) => {
-        const { coordinates } = geom;
+  const coordinates = useMemo(() => {
+    const entries = roads?.data?.entries?.();
 
-        return {
-          coordinates: _.map(coordinates, (coords) =>
-            _.map(coords, (coord) => [coord[1], coord[0]])
-          ),
-          type: remark,
-        };
-      }),
-    [roads]
-  );
+    if (!entries) return [];
+
+    const arrayEntries = Array.from(entries).map(([, value]) => value);
+
+    return _.map(arrayEntries, ({ geom, remark }) => ({
+      coordinates: geom.coordinates,
+      type: remark,
+    }));
+  }, [roads]);
 
   return (
     <Box gap={2} overflow={'hidden'} h={'100vh'} w={'100vw'}>
