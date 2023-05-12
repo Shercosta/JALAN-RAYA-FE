@@ -12,5 +12,13 @@
   "rules": {
     "react-refresh/only-export-components": "warn",
     "react/prop-types": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }
