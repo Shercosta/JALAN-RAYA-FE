@@ -1,25 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
-import axios from '../utils/axios';
+import { useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { getAllData } from '../store/actions/jalanRaya';
+import { getJalanRayas } from '../store/selectors/jalanRaya';
 
 /**
  * @param {Object} args
  * @param {string} args.type
  * @param {React.Dispatch<React.SetStateAction<boolean>>} args.setIsFetching
  */
-const useRoadLoader = ({ type, setIsFetching }) => {
-  const [roads, setRoads] = useState([]);
+const useRoadLoader = ({ setIsFetching, type }) => {
+  const roads = useSelector(getJalanRayas);
 
-  const getNewRoads = useCallback(async () => {
+  const getAllRoad = useCallback(async () => {
+    setIsFetching(true);
+
     try {
-      setIsFetching(true);
-
       const query = type.toLowerCase() === 'none' ? '' : `remark="${type}"`;
 
-      const { data } = await axios.get(
-        `/api/jalan-rayas?limit=all&&filters=${query}`
-      );
-
-      if (data?.data?.length) setRoads(data.data);
+      await getAllData(`limit=all&&filters=${query}`, true)();
     } catch (err) {
       console.log(err);
     } finally {
@@ -28,7 +26,7 @@ const useRoadLoader = ({ type, setIsFetching }) => {
   }, [type, setIsFetching]);
 
   useEffect(() => {
-    getNewRoads();
+    getAllRoad();
   }, [type]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return roads;
